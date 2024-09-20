@@ -8,20 +8,44 @@
 </head>
 <body>
   <div class="game-container">
-    <div id="map" class="map1">
+    <div id="map1" class="map">
       <div class="item">O</div>
     </div>
+    <div id="map2" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map3" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map4" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map5" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map6" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map7" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map8" class="map">
+      <div class="item">O</div>
+    </div>
+    <div id="map9" class="map">
+      <div class="item">O</div>
+    </div>
+
     <div id="player"></div>
-    
     <div id="linea"></div>
   </div>
   <script>
       $( document ).ready(function() {
       const map = document.getElementById('map');
       const player = document.getElementById('player');
-      let mapX = 0;
-      let mapY = 0;
-      const mapStep = 5;
+      let mapX = -100;
+      let mapY = -100;
+      const mapStep = 10;
       
       document.addEventListener('keydown', (e) => {
         switch (e.key) {
@@ -52,25 +76,34 @@
         //drawLine(posplayer.left+15, posplayer.top+15, positem.left, positem.top);
 
         function drawLine(x1, y1, x2, y2) {
-                  const line = document.getElementById('linea');
-                  
-                  // Calcola la distanza tra i due punti
-                  const dx = x2 - x1;
-                  const dy = y2 - y1;
-                  const length = Math.sqrt(dx * dx + dy * dy); // Lunghezza della linea
-                  
-                  // Imposta la posizione e le dimensioni
-                  line.style.width = length + 'px';
-                  line.style.height = '2px'; // Spessore della linea
-                  line.style.left = x1 + 'px';
-                  line.style.top = y1 + 'px';
+          const line = document.getElementById('linea');
+          
+          // Calcola la distanza tra i due punti
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const length = Math.sqrt(dx * dx + dy * dy); // Lunghezza della linea
+          
+          // Imposta la posizione e le dimensioni
+          line.style.width = length + 'px';
+          line.style.height = '2px'; // Spessore della linea
+          line.style.left = x1 + 'px';
+          line.style.top = y1 + 'px';
 
-                  // Calcola l'angolo di rotazione
-                  const angle = Math.atan2(dy, dx) * (180 / Math.PI); // Converti da radiani a gradi
-                  line.style.transform = `rotate(${angle}deg)`;
-              }
+          // Calcola l'angolo di rotazione
+          const angle = Math.atan2(dy, dx) * (180 / Math.PI); // Converti da radiani a gradi
+          line.style.transform = `rotate(${angle}deg)`;
+        }
 
-      
+        const mapdelta = 100;
+        $("#map1").attr("style","transform: translate(-100px, -100px);")
+        $("#map2").attr("style","transform: translate(+000px, -100px);")
+        $("#map3").attr("style","transform: translate(+100px, -100px);")
+        $("#map4").attr("style","transform: translate(-100px, +000px);")
+        $("#map5").attr("style","transform: translate(+000px, +000px);")
+        $("#map6").attr("style","transform: translate(+100px, +000px);")
+        $("#map7").attr("style","transform: translate(-100px, +100px);")
+        $("#map8").attr("style","transform: translate(+000px, +100px);")
+        $("#map9").attr("style","transform: translate(+100px, +100px);")
     });
   </script>
   <style>
@@ -99,9 +132,10 @@
       border: 2px solid black;
     }
     
-    #map {
-      width: 2000vw; /* Size of the full map */
-      height: 2000vh;
+    .map {
+      border:1px solid black;
+      width: 200px; /* Size of the full map */
+      height: 200px;
       background-image: url('pattern.png'); /* Optional background image */
       background-repeat: repeat;
       position: relative;
