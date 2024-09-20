@@ -7,70 +7,92 @@
   <script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script>
 </head>
 <body>
-  <div class="game-container">
-    <div id="map" class="map1">
-      <div class="item">O</div>
+  <div id="game">
+
+    <div id="maps">
+      <div id="map1" class="map" style="margin-left: -200px; margin-top: -200px;"></div>
+      <div id="map2" class="map" style="margin-left: +000px; margin-top: -200px;"></div>
+      <div id="map3" class="map" style="margin-left: +200px; margin-top: -200px;"></div>
+
+      <div id="map4" class="map" style="margin-left: -200px; margin-top: +000px;"></div>
+      <div id="map5" class="map" style="margin-left: +000px; margin-top: +000px;"></div>
+      <div id="map6" class="map" style="margin-left: +200px; margin-top: +000px;"></div>
+
+      <div id="map7" class="map" style="margin-left: -200px; margin-top: 200px;"></div>
+      <div id="map8" class="map" style="margin-left: +000px; margin-top: +200px;"></div>
+      <div id="map9" class="map" style="margin-left: +200px; margin-top: +200px;"></div>
     </div>
-    <div id="player"></div>
-    
-    <div id="linea"></div>
+
+    <div id="entities">
+      <div id="player">X</div>
+      <div class="item" style="margin-left: +180px; margin-top: +120px;">O</div>
+    </div>
+
+    <div id="lines">
+      <div id="line"></div>
+    </div>
+
   </div>
+  
   <script>
-      $( document ).ready(function() {
-      const map = document.getElementById('map');
+    $( document ).ready(function() {
+
+      const map = document.getElementById('map1');
       const player = document.getElementById('player');
-      let mapX = 0;
-      let mapY = 0;
       const mapStep = 5;
-      
+      updateLine();
+        
       document.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'ArrowUp':
-            mapY += mapStep;
+          case 'w':
+          $("#game").css('top', $("#game").position().top + mapStep);
             break;
           case 'ArrowDown':
-            mapY -= mapStep;
+          case 's':
+          $("#game").css('top', $("#game").position().top - mapStep);
             break;
           case 'ArrowLeft':
-            mapX += mapStep;
+          case 'a':
+          $("#game").css('left', $("#game").position().left + mapStep);
             break;
           case 'ArrowRight':
-            mapX -= mapStep;
+          case 'd':
+          $("#game").css('left', $("#game").position().left - mapStep);
             break;
         }
-
-        let posplayer = $("#player").position();
-        let positem = $(".item").position();
-        drawLine(posplayer.left+15, posplayer.top+15, positem.left+mapX, positem.top+mapY);
-        console.table([posplayer,positem]);
-        map.style.transform = `translate(${mapX}px, ${mapY}px)`;
+        updateLine();
       });
 
-        //let posplayer = $(player).position();
-        //let positem = $(".item").position();
+      function updateLine() {
+        let posplayer = $("#player").offset();
+        let positem = $(".item").offset();
+        console.log(positem)
+        drawLine(document.getElementById('line'), posplayer.left+15, posplayer.top+15, positem.left, positem.top);
+      }
+
+      function drawLine(line, x1, y1, x2, y2) {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.sqrt(dx * dx + dy * dy);
         
-        //drawLine(posplayer.left+15, posplayer.top+15, positem.left, positem.top);
+        line.style.width = 'calc('+length+'px - 1px)';
+        line.style.height = '2px';
+        line.style.left = 'calc('+x1+'px - 1px)';
+        line.style.top = 'calc('+y1+'px + 1px)';
 
-        function drawLine(x1, y1, x2, y2) {
-                  const line = document.getElementById('linea');
-                  
-                  // Calcola la distanza tra i due punti
-                  const dx = x2 - x1;
-                  const dy = y2 - y1;
-                  const length = Math.sqrt(dx * dx + dy * dy); // Lunghezza della linea
-                  
-                  // Imposta la posizione e le dimensioni
-                  line.style.width = length + 'px';
-                  line.style.height = '2px'; // Spessore della linea
-                  line.style.left = x1 + 'px';
-                  line.style.top = y1 + 'px';
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        line.style.transform = `rotate(${angle}deg)`;
+      }
 
-                  // Calcola l'angolo di rotazione
-                  const angle = Math.atan2(dy, dx) * (180 / Math.PI); // Converti da radiani a gradi
-                  line.style.transform = `rotate(${angle}deg)`;
-              }
+      let resizeTimer;
+      $(window).on('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            updateLine();
+          }, 10);
+      });
 
-      
     });
   </script>
   <style>
@@ -79,44 +101,60 @@
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body, html {
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      
-    }
-    .item { top:200px; left:200px; position:absolute;}
-    #linea { position: absolute; height:3px; background: black;
-      transform-origin: 0 0;}
-    .game-container {
-      width: 100vw; /* The size of the visible game area */
-      height: 100vh;
-      aspect-ratio: 2472 / 4400;
-      overflow: hidden; /* Hide parts of the map outside the view */
       position: relative;
-      border: 2px solid black;
+      overflow: hidden;
     }
-    
-    #map {
-      width: 2000vw; /* Size of the full map */
-      height: 2000vh;
-      background-image: url('pattern.png'); /* Optional background image */
+
+    #game {
+      width: 1px;
+      height: 1px;
+      position: fixed;
+      inset: 0;
+      margin: auto;
+    }
+
+    .map {
+      width: 200px;
+      height: 200px;
+      background-image: url('pattern.png');
       background-repeat: repeat;
-      position: relative;
-      top: 0;
-      left: 0;
-    }
-    
-    #player {
-      width: 30px;
-      height: 30px;
-      background-color: red;
       position: absolute;
-      top: 50%; /* Place player in the center of the visible area */
+      left: -100px;
+      top: -100px;
+      outline: 1px solid orange;
+      transform-origin: 0 0;
+    }
+
+    #player {
+      position: fixed;
+      z-index: 99999;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      background: blue;
+      border-radius: 100%;
+      padding: 5px;
+      color: #fff;
+    }
+
+    .item {
+      position: absolute;
+      background: red;
+      border-radius: 100%;
+      padding: 5px;
+      color: #fff;
+    }
+    
+    #line {
+      position: fixed;
+      background: gray;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transform-origin: left top;
     }
   </style>
 </body>
