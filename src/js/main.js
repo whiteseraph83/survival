@@ -37,58 +37,80 @@
 
     engine.gravity.y = 0;
     
-    var player = DomBodies.block(100, 100, {
-      frictionAir: 0.1,
-      //position: { x: -$("#player").offset().left, y: -$("#player").offset().top },
+    /*var player = DomBodies.block(0, 0, {
+      frictionAir: 0.8,
       Dom: {
         render: render,
         element: document.querySelector('#player')
-      }
-    });
+      },
+    });*/
+
+    var player = DomBodies.create({
+      Dom: {
+          render: render,
+          element: document.querySelector('#player')
+      },
+      el: '#player',
+      render: render,
+      position: {x: 0, y: 0},
+      bodyType: 'circle',
+      restitution: 0.9,
+      friction: 0.2,
+      frictionStatic: 0.0,
+      frictionAir: 1
+  });
+
+
     World.add(world, player);
+
+
+
+
+
+
     player.onCollide(function(pair) {
       console.log(pair.bodyB);
     });
 
-    var item = DomBodies.block(10, 10, {
-      frictionAir: 0.1,
+    /*var item = DomBodies.block(100, 100, {
+      frictionAir: 0.8,
       Dom: {
         render: render,
         element: document.querySelector('.item')
       }
-    });
-    World.add(world, item);
+    });*/
 
-    var game = DomBodies.block(10, 10, {
-      frictionAir: 0.1,
-      collisionFilter: { category: 0x0001, mask: 0x0000 },
+    
+
+    var item = DomBodies.create({
       Dom: {
-        render: render,
-        element: document.querySelector('#game')
-      }
-    });
-    World.add(world, game);
+          render: render,
+          element: document.querySelector('.item')
+      },
+      el: '.item',
+      render: render,
+      position: {x: 100, y: 100},
+      bodyType: 'circle',
+      restitution: 0.9,
+      friction: 0.2,
+      frictionStatic: 0.0,
+      frictionAir: 1
+  });
+
+    World.add(world, item);
 
     const keyHandlers = {
       KeyD: () => {
-        Matter.Body.applyForce(game, game.position, { x: -0.0000002, y: 0 });
-        Matter.Body.applyForce(player, player.position, { x: -0.0000002, y: 0 });
-        updateLine();
+        Matter.Body.applyForce(player, player.position, { x: +0.00001, y: 0 });
       },
       KeyA: () => {
-        Matter.Body.applyForce(game, game.position, { x: +0.0000002, y: 0 });
-        Matter.Body.applyForce(player, player.position, { x: +0.0000002, y: 0 });
-        updateLine();
+        Matter.Body.applyForce(player, player.position, { x: -0.00001, y: 0 });
       },
       KeyS: () => {
-        Matter.Body.applyForce(game, game.position, { x: 0, y: -0.0000002 });
-        Matter.Body.applyForce(player, player.position, { x: 0, y: -0.0000002 });
-        updateLine();
+        Matter.Body.applyForce(player, player.position, { x: 0, y: +0.00001 });
       },
       KeyW: () => {
-        Matter.Body.applyForce(game, game.position, { x: 0, y: +0.0000002 });
-        Matter.Body.applyForce(player, player.position, { x: 0, y: +0.0000002 });
-        updateLine();
+        Matter.Body.applyForce(player, player.position, { x: 0, y: -0.00001 });
       },
     };
 
@@ -98,9 +120,19 @@
 
     Matter.Events.on(engine, "beforeUpdate", event => {
       [...keysDown].forEach(k => keyHandlers[k]?.());
-      const { x, y } = game.position;
-      $("#game").css({ left: `${x}px`, top: `${y}px` });
+      const { x, y } = player.position;
+      //position: absolute; transform: translate(76.6667px, -15px) rotate(0rad);
+      let translate = $("#player").attr('style').toString().split(' rotate')[0].replace('position: absolute; transform: translate(','').replace('px)','').split('px, '); 
+      //console.log(translate);
+      
+      $("#game").attr('style','transform: translate('+(translate[0] * -1)+'px, '+(translate[1] * -1)+'px)');
+      //$("#game").css({ left: `${x}px`, top: `${y}px` });
+      //$(".item").css({ left: `${(item.position.x * -1)}px`, top: `${(item.position.y * -1)}px` });
+      updateLine();
+      //console.log(item.position);
+      
     });
+    
 
 
     /*Matter.Events.on(engine, 'collisionStart', function(event) {

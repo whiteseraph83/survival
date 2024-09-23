@@ -11,10 +11,8 @@
 </head>
 <body>
   <div id="debug"></div>
-  <div id="block" matter></div>
-  <div id="player">X</div>
+  <div id="player" style="position: absolute; transform: translate(0px, 0px) rotate(0rad)">X</div>
   <div id="game">
-
     <div id="maps">
       <div id="map1" class="map" style="margin-left: calc(var(--baseMappa) * -1px); margin-top: calc(var(--baseMappa) * -1px);"></div>
       <div id="map2" class="map" style="margin-left: calc(var(--baseMappa) * +0px); margin-top: calc(var(--baseMappa) * -1px);"></div>
@@ -30,21 +28,19 @@
     </div>
 
     <div id="entities">
-      <div class="item" style="margin-left: +100px; margin-top: +100px;">O</div>
+      <div class="item">O</div>
     </div>
-
-    <div id="lines">
-      <div id="line"></div>
-    </div>
-    
-
+  </div>
+  <div id="lines">
+    <div id="line"></div>
   </div>
   
   <script>
     const updateLine = () => {
       let posplayer = $("#player").offset();
         let positem = $(".item").offset();
-        drawLine(document.getElementById('line'), posplayer.left+15, posplayer.top+15, positem.left, positem.top);
+      //console.log(posplayer,positem);
+        drawLine(document.getElementById('line'), posplayer.left, posplayer.top, positem.left, positem.top);
     }
     const drawLine = (line, x1, y1, x2, y2) => {
       const dx = x2 - x1;
@@ -118,7 +114,7 @@
       z-index: 99999;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) !important;
       background: blue;
       border-radius: 100%;
       width: 30px;
@@ -137,7 +133,10 @@
       line-height: 30px;
       text-align: center;
       color: #fff;
-      transform: translate(100%, 100%);
+      left:-12px;
+      top:-12px;
+      /*transform: translate(100%, 100%);*/
+      /*transform-origin: left top;*/
     }
     
     #line {
