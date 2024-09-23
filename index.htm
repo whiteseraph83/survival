@@ -4,9 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title></title>
-  <script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="src/js/matter.min.js"></script>
+  <script src="src/js/matter-collision-events.min.js"></script>
+  <script src="src/js/matter-dom-plugin.min.js"></script>
 </head>
 <body>
+  <div id="debug"></div>
+  <div id="block" matter></div>
   <div id="game">
 
     <div id="maps">
@@ -25,12 +30,13 @@
 
     <div id="entities">
       <div id="player">X</div>
-      <div class="item" style="margin-left: +180px; margin-top: +120px;">O</div>
+      <div class="item" style="margin-left: 0px; margin-top: 0px;">O</div>
     </div>
 
     <div id="lines">
       <div id="line"></div>
     </div>
+    
 
   </div>
   
@@ -41,7 +47,8 @@
       const player = document.getElementById('player');
       const mapStep = 20;
       updateLine();
-        
+       
+      /*
       document.addEventListener('keydown', (e) => {
         switch (e.key) {
           case 'ArrowUp':
@@ -62,12 +69,13 @@
             break;
         }
         updateLine();
-      });
+      });*/
 
+      
       function updateLine() {
         let posplayer = $("#player").offset();
         let positem = $(".item").offset();
-        console.log(positem)
+        //console.log(positem)
         drawLine(document.getElementById('line'), posplayer.left+15, posplayer.top+15, positem.left, positem.top);
       }
 
@@ -132,7 +140,7 @@
     }
 
     #player {
-      position: fixed;
+      position: fixed !important;
       z-index: 99999;
       top: 50%;
       left: 50%;
@@ -160,5 +168,6 @@
       transform-origin: left top;
     }
   </style>
+  <script src="src/js/main.js"></script>
 </body>
 </html>
