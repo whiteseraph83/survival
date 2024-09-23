@@ -10,17 +10,17 @@
   <div id="game">
 
     <div id="maps">
-      <div id="map1" class="map" style="margin-left: -200px; margin-top: -200px;"></div>
-      <div id="map2" class="map" style="margin-left: +000px; margin-top: -200px;"></div>
-      <div id="map3" class="map" style="margin-left: +200px; margin-top: -200px;"></div>
+      <div id="map1" class="map" style="margin-left: calc(var(--baseMappa) * -1px); margin-top: calc(var(--baseMappa) * -1px);"></div>
+      <div id="map2" class="map" style="margin-left: calc(var(--baseMappa) * +0px); margin-top: calc(var(--baseMappa) * -1px);"></div>
+      <div id="map3" class="map" style="margin-left: calc(var(--baseMappa) * +1px); margin-top: calc(var(--baseMappa) * -1px);"></div>
 
-      <div id="map4" class="map" style="margin-left: -200px; margin-top: +000px;"></div>
-      <div id="map5" class="map" style="margin-left: +000px; margin-top: +000px;"></div>
-      <div id="map6" class="map" style="margin-left: +200px; margin-top: +000px;"></div>
+      <div id="map4" class="map" style="margin-left: calc(var(--baseMappa) * -1px); margin-top: calc(var(--baseMappa) * +0px);"></div>
+      <div id="map5" class="map" style="margin-left: calc(var(--baseMappa) * +0px); margin-top: calc(var(--baseMappa) * +0px);"></div>
+      <div id="map6" class="map" style="margin-left: calc(var(--baseMappa) * +1px); margin-top: calc(var(--baseMappa) * +0px);"></div>
 
-      <div id="map7" class="map" style="margin-left: -200px; margin-top: 200px;"></div>
-      <div id="map8" class="map" style="margin-left: +000px; margin-top: +200px;"></div>
-      <div id="map9" class="map" style="margin-left: +200px; margin-top: +200px;"></div>
+      <div id="map7" class="map" style="margin-left: calc(var(--baseMappa) * -1px); margin-top: calc(var(--baseMappa) * +1px);"></div>
+      <div id="map8" class="map" style="margin-left: calc(var(--baseMappa) * +0px); margin-top: calc(var(--baseMappa) * +1px);"></div>
+      <div id="map9" class="map" style="margin-left: calc(var(--baseMappa) * +1px); margin-top: calc(var(--baseMappa) * +1px);"></div>
     </div>
 
     <div id="entities">
@@ -39,7 +39,7 @@
 
       const map = document.getElementById('map1');
       const player = document.getElementById('player');
-      const mapStep = 5;
+      const mapStep = 20;
       updateLine();
         
       document.addEventListener('keydown', (e) => {
@@ -96,6 +96,9 @@
     });
   </script>
   <style>
+    :root {
+      --baseMappa: 500;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -117,13 +120,13 @@
     }
 
     .map {
-      width: 200px;
-      height: 200px;
+      width: calc(var(--baseMappa) * +1px);
+      height: calc(var(--baseMappa) * +1px);
       background-image: url('pattern.png');
       background-repeat: repeat;
       position: absolute;
-      left: -100px;
-      top: -100px;
+      left: calc(var(--baseMappa) * -0.5px);
+      top: calc(var(--baseMappa) * -0.5px);
       outline: 1px solid orange;
       transform-origin: 0 0;
     }
