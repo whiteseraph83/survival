@@ -12,6 +12,7 @@
 <body>
   <div id="debug"></div>
   <div id="block" matter></div>
+  <div id="player">X</div>
   <div id="game">
 
     <div id="maps">
@@ -29,8 +30,7 @@
     </div>
 
     <div id="entities">
-      <div id="player">X</div>
-      <div class="item" style="margin-left: 0px; margin-top: 0px;">O</div>
+      <div class="item" style="margin-left: +100px; margin-top: +100px;">O</div>
     </div>
 
     <div id="lines">
@@ -41,57 +41,31 @@
   </div>
   
   <script>
+    const updateLine = () => {
+      let posplayer = $("#player").offset();
+        let positem = $(".item").offset();
+        drawLine(document.getElementById('line'), posplayer.left+15, posplayer.top+15, positem.left, positem.top);
+    }
+    const drawLine = (line, x1, y1, x2, y2) => {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      
+      line.style.width = 'calc('+length+'px - 1px)';
+      line.style.height = '2px';
+      line.style.left = 'calc('+x1+'px - 1px)';
+      line.style.top = 'calc('+y1+'px + 1px)';
+
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      line.style.transform = `rotate(${angle}deg)`;
+    }
+
     $( document ).ready(function() {
 
       const map = document.getElementById('map1');
       const player = document.getElementById('player');
       const mapStep = 20;
       updateLine();
-       
-      /*
-      document.addEventListener('keydown', (e) => {
-        switch (e.key) {
-          case 'ArrowUp':
-          case 'w':
-          $("#game").css('top', $("#game").position().top + mapStep);
-            break;
-          case 'ArrowDown':
-          case 's':
-          $("#game").css('top', $("#game").position().top - mapStep);
-            break;
-          case 'ArrowLeft':
-          case 'a':
-          $("#game").css('left', $("#game").position().left + mapStep);
-            break;
-          case 'ArrowRight':
-          case 'd':
-          $("#game").css('left', $("#game").position().left - mapStep);
-            break;
-        }
-        updateLine();
-      });*/
-
-      
-      function updateLine() {
-        let posplayer = $("#player").offset();
-        let positem = $(".item").offset();
-        //console.log(positem)
-        drawLine(document.getElementById('line'), posplayer.left+15, posplayer.top+15, positem.left, positem.top);
-      }
-
-      function drawLine(line, x1, y1, x2, y2) {
-        const dx = x2 - x1;
-        const dy = y2 - y1;
-        const length = Math.sqrt(dx * dx + dy * dy);
-        
-        line.style.width = 'calc('+length+'px - 1px)';
-        line.style.height = '2px';
-        line.style.left = 'calc('+x1+'px - 1px)';
-        line.style.top = 'calc('+y1+'px + 1px)';
-
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-        line.style.transform = `rotate(${angle}deg)`;
-      }
 
       let resizeTimer;
       $(window).on('resize', function() {
@@ -120,9 +94,9 @@
     }
 
     #game {
-      width: 1px;
-      height: 1px;
-      position: fixed;
+      width: 5px;
+      height: 5px;
+      position: fixed !important;
       inset: 0;
       margin: auto;
     }
@@ -147,7 +121,10 @@
       transform: translate(-50%, -50%);
       background: blue;
       border-radius: 100%;
-      padding: 5px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
       color: #fff;
     }
 
@@ -155,8 +132,12 @@
       position: absolute;
       background: red;
       border-radius: 100%;
-      padding: 5px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
       color: #fff;
+      transform: translate(100%, 100%);
     }
     
     #line {

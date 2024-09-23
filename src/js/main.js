@@ -36,19 +36,22 @@
 
 
     engine.gravity.y = 0;
-
-
     
-
     var player = DomBodies.block(100, 100, {
+      frictionAir: 0.1,
+      //position: { x: -$("#player").offset().left, y: -$("#player").offset().top },
       Dom: {
         render: render,
         element: document.querySelector('#player')
       }
     });
     World.add(world, player);
+    player.onCollide(function(pair) {
+      console.log(pair.bodyB);
+    });
 
-    var item = DomBodies.block(200, 200, {
+    var item = DomBodies.block(10, 10, {
+      frictionAir: 0.1,
       Dom: {
         render: render,
         element: document.querySelector('.item')
@@ -56,89 +59,55 @@
     });
     World.add(world, item);
 
-
-
-    
-
-    player.onCollide(function(pair) {
-        console.log('BoxB got hit!', pair);
-            //pair.bodyA.render.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-            //pair.bodyB.render.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+    var game = DomBodies.block(10, 10, {
+      frictionAir: 0.1,
+      collisionFilter: { category: 0x0001, mask: 0x0000 },
+      Dom: {
+        render: render,
+        element: document.querySelector('#game')
+      }
     });
+    World.add(world, game);
 
-
-      
     const keyHandlers = {
       KeyD: () => {
-        Matter.Body.applyForce(game, {
-          x: player.position.x,
-          y: player.position.y
-        }, {x: 0.0000002, y: 0});
-
-        
-        $("#game").css('left', -player.position.x);
-          
+        Matter.Body.applyForce(game, game.position, { x: -0.0000002, y: 0 });
+        Matter.Body.applyForce(player, player.position, { x: -0.0000002, y: 0 });
+        updateLine();
       },
       KeyA: () => {
-        Matter.Body.applyForce(player, {
-          x: player.position.x,
-          y: player.position.y
-        }, {x: -0.0000002, y: 0});
-
-        $("#game").css('left', player.position.x);
+        Matter.Body.applyForce(game, game.position, { x: +0.0000002, y: 0 });
+        Matter.Body.applyForce(player, player.position, { x: +0.0000002, y: 0 });
+        updateLine();
       },
       KeyS: () => {
-        Matter.Body.applyForce(player, {
-          x: player.position.x,
-          y: player.position.y
-        }, {x:0, y: 0.0000002})
+        Matter.Body.applyForce(game, game.position, { x: 0, y: -0.0000002 });
+        Matter.Body.applyForce(player, player.position, { x: 0, y: -0.0000002 });
+        updateLine();
       },
       KeyW: () => {
-        Matter.Body.applyForce(player, {
-          x: player.position.x,
-          y: player.position.y
-        }, {x:0, y: -0.0000002})
+        Matter.Body.applyForce(game, game.position, { x: 0, y: +0.0000002 });
+        Matter.Body.applyForce(player, player.position, { x: 0, y: +0.0000002 });
+        updateLine();
       },
     };
 
     const keysDown = new Set();
-    document.addEventListener("keydown", event => {
-      keysDown.add(event.code);
-    });
-    document.addEventListener("keyup", event => {
-      keysDown.delete(event.code);
-    });
-
+    document.addEventListener("keydown", event => keysDown.add(event.code));
+    document.addEventListener("keyup", event => keysDown.delete(event.code));
 
     Matter.Events.on(engine, "beforeUpdate", event => {
-      [...keysDown].forEach(k => {
-        keyHandlers[k]?.();
-      });
+      [...keysDown].forEach(k => keyHandlers[k]?.());
+      const { x, y } = game.position;
+      $("#game").css({ left: `${x}px`, top: `${y}px` });
     });
 
 
-
-
-
-
-
-
-/*
-    // Listener per rilevare le collisioni
-    Matter.Events.on(engine, 'collisionStart', function(event) {
-      const pairs = event.pairs;
-
-      // Controlla le coppie di oggetti in collisione
-      pairs.forEach(function(pair) {
+    /*Matter.Events.on(engine, 'collisionStart', function(event) {
+      event.pairs.forEach(function(pair) {
         console.log(pair);
-        const bodyA = pair.bodyA;
-        const bodyB = pair.bodyB;
-
-        // Verifica se player e item hanno colliso
-        if ((bodyA === player && bodyB === item) || (bodyA === item && bodyB === player)) {
-            console.log('Collisione tra player e item!');
-            // Aggiungi la logica per raccogliere l'item qui
-        }
       });
     });*/
+
+
 })();
